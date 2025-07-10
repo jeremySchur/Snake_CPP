@@ -6,3 +6,8 @@ main.o:
 
 game.o:
 	g++ -c src/game.cpp
+
+clean:
+	del snake.exe
+	del main.o
+	del game.o
