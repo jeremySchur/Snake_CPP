@@ -1,11 +1,15 @@
+CXX = g++
+CXXFLAGS = -std=c++17 -Iraylib/src
+LDFLAGS = raylib/src/libraylib.a
+
 output: main.o game.o
-	g++ main.o game.o -o snake
+	$(CXX) main.o game.o -o snake $(LDFLAGS)
 
 main.o:
-	g++ -c src/main.cpp
+	$(CXX) $(CXXFLAGS) -c src/main.cpp
 
 game.o:
-	g++ -c src/game.cpp
+	$(CXX) $(CXXFLAGS) -c src/game.cpp
 
 clean:
 	del snake.exe
