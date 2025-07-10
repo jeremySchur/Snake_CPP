@@ -1,6 +1,6 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Iraylib/src
-LDFLAGS = raylib/src/libraylib.a
+LDFLAGS = raylib/src/libraylib.a -lopengl32 -lgdi32 -lwinmm
 
 output: main.o game.o
 	$(CXX) main.o game.o -o snake $(LDFLAGS)
