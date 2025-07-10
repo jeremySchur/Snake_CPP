@@ -3,5 +3,7 @@
 
 int main() {
     Game snake;
-    std::cout << snake.isGameOver() << std::endl;
+    snake.run();
+
+    return 0;
 }
