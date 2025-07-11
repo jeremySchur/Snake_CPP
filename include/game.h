@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <time.h>
+#include <vector>
 #include "raylib.h"
 
 class Game {
@@ -10,6 +11,7 @@ class Game {
         Game();
         ~Game();
 
+        void setup();
         void run();
     private:
         bool gameOver { false };
@@ -17,6 +19,9 @@ class Game {
         const int screenWidth { 900 };
         const int screenHeight { 900 };
         const int spacing { 30 };
+
+        std::vector<int> verticalLines;
+        std::vector<int> horizontalLines;
 
         int playerX, playerY, fruitX, fruitY;
         int score { 0 };
@@ -29,7 +34,7 @@ class Game {
             DOWN,
         };
 
-        Direction dir { STOP };
+        Direction playerDirection { STOP };
 };
 
 #endif

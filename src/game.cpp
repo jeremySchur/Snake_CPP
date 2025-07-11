@@ -1,19 +1,32 @@
 #include "../include/Game.h"
 
 Game::Game() {
-    playerX = screenWidth / 2;
-    playerY = screenHeight / 2;
-    fruitX = rand() % screenWidth;
-    fruitY = rand() % screenHeight;
+    srand(time(0));
+    setup();
 }
 
 Game::~Game() {
 
 }
 
-void Game::run() {
-    srand(time(0));
+void Game::setup() {
+    for (int i = 0; i <= screenWidth; i += spacing) {
+        verticalLines.push_back(i);
+    }
+    for (int i = 0; i <= screenHeight; i += spacing) {
+        horizontalLines.push_back(i);
+    }
 
+    const int vSize = verticalLines.size();
+    const int hSize = horizontalLines.size();
+
+    playerX = verticalLines[vSize / 2];
+    playerY = horizontalLines[hSize / 2];
+    fruitX = verticalLines[rand() % vSize];
+    fruitY = horizontalLines[rand() % hSize];
+}
+
+void Game::run() {
     InitWindow(screenWidth, screenHeight, "Snake");
 
     while (!WindowShouldClose()) {
@@ -23,9 +36,11 @@ void Game::run() {
                 DrawLine(i, 0, i, screenHeight, GRAY);
                 DrawLine(0, i, screenWidth, i, GRAY);
             }
-
-            DrawRectangle(playerX + 1, playerY + 2, spacing - 4, spacing - 4, GREEN);
-            DrawCircle(fruitX + 2, fruitY - 1, spacing - 18, RED);
+            
+            const int halfSpacing = spacing / 2;
+            const int fifthSpacing = spacing / 5;
+            DrawCircle(playerX + halfSpacing, playerY + halfSpacing, spacing - 18, GREEN);
+            DrawCircle(fruitX + halfSpacing, fruitY + halfSpacing, spacing - 18, RED);
             
         EndDrawing();
     }
