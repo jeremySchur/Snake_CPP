@@ -10,37 +10,36 @@ Game::~Game() {
 }
 
 void Game::setup() {
-    for (int i = 0; i <= screenWidth; i += spacing) {
+    for (int i = 0; i <= SCREEN_WIDTH; i += SPACING) {
         verticalLines.push_back(i);
     }
-    for (int i = 0; i <= screenHeight; i += spacing) {
+    for (int i = 0; i <= SCREEN_HEIGHT; i += SPACING) {
         horizontalLines.push_back(i);
     }
 
     const int vSize = verticalLines.size();
     const int hSize = horizontalLines.size();
 
-    playerX = verticalLines[vSize / 2];
-    playerY = horizontalLines[hSize / 2];
+    snake[0] = SnakeComponent(verticalLines[vSize / 2], horizontalLines[hSize / 2]);
     fruitX = verticalLines[rand() % vSize];
     fruitY = horizontalLines[rand() % hSize];
 }
 
 void Game::run() {
-    InitWindow(screenWidth, screenHeight, "Snake");
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Snake");
 
     while (!WindowShouldClose()) {
         BeginDrawing();
             ClearBackground(BLACK);
-            for (int i = spacing; i <= screenWidth - spacing; i += spacing) {
-                DrawLine(i, 0, i, screenHeight, GRAY);
-                DrawLine(0, i, screenWidth, i, GRAY);
+            for (int i = SPACING; i <= SCREEN_WIDTH - SPACING; i += SPACING) {
+                DrawLine(i, 0, i, SCREEN_HEIGHT, GRAY);
+                DrawLine(0, i, SCREEN_WIDTH, i, GRAY);
             }
             
-            const int halfSpacing = spacing / 2;
-            const int fifthSpacing = spacing / 5;
-            DrawCircle(playerX + halfSpacing, playerY + halfSpacing, spacing - 18, GREEN);
-            DrawCircle(fruitX + halfSpacing, fruitY + halfSpacing, spacing - 18, RED);
+            const int halfSpacing = SPACING / 2;
+            const int fifthSpacing = SPACING / 5;
+            DrawCircle(snake[0].x + halfSpacing, snake[0].y + halfSpacing, SPACING - 18, GREEN);
+            DrawCircle(fruitX + halfSpacing, fruitY + halfSpacing, SPACING - 18, RED);
             
         EndDrawing();
     }
