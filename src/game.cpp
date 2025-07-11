@@ -1,5 +1,4 @@
 #include "../include/Game.h"
-#include "raylib.h"
 
 Game::Game() {
     playerX = screenWidth / 2;
@@ -13,12 +12,21 @@ Game::~Game() {
 }
 
 void Game::run() {
-    InitWindow(800, 400, "Snake");
+    srand(time(0));
+
+    InitWindow(screenWidth, screenHeight, "Snake");
 
     while (!WindowShouldClose()) {
         BeginDrawing();
-            ClearBackground(RAYWHITE);
-            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+            ClearBackground(BLACK);
+            for (int i = spacing; i <= screenWidth - spacing; i += spacing) {
+                DrawLine(i, 0, i, screenHeight, GRAY);
+                DrawLine(0, i, screenWidth, i, GRAY);
+            }
+
+            DrawRectangle(playerX + 1, playerY + 2, spacing - 4, spacing - 4, GREEN);
+            DrawCircle(fruitX + 2, fruitY - 1, spacing - 18, RED);
+            
         EndDrawing();
     }
 
