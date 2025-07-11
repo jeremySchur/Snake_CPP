@@ -20,7 +20,9 @@ void Game::run() {
 
         handleKeyPress();
         if (currentTime - lastMoveTime >= moveDelay) {
-            updateSnakePos();
+            if (playerDirection != STOP) {
+                updateSnakePos();
+            }
             lastMoveTime = currentTime;
         }
 
@@ -31,7 +33,9 @@ void Game::run() {
                 DrawLine(0, i, SCREEN_WIDTH, i, GRAY);
             }
             
-            DrawCircle(snake[0].x + halfSpacing, snake[0].y + halfSpacing, SPACING - 18, GREEN);
+            for (int i = 0; i < snakeLength; i++) {
+                DrawCircle(snake[i].x + halfSpacing, snake[i].y + halfSpacing, SPACING - 18, GREEN);
+            }
             DrawCircle(fruitX + halfSpacing, fruitY + halfSpacing, SPACING - 18, RED);
             
         EndDrawing();
@@ -72,24 +76,21 @@ void Game::handleKeyPress() {
 }
 
 void Game::updateSnakePos() {
+    for (int i = snakeLength - 1; i > 0; i--) {
+        snake[i].x = snake[i-1].x;
+        snake[i].y = snake[i-1].y;
+    }
+
     if (playerDirection == RIGHT) {
-        for (int i = 0; i < snakeLength; i++) {
-            snake[i].x += SPACING;
-        }
+        snake[0].x += SPACING;
     }
     if (playerDirection == LEFT) {
-        for (int i = 0; i < snakeLength; i++) {
-            snake[i].x -= SPACING;
-        }
+        snake[0].x -= SPACING;
     }
     if (playerDirection == UP) {
-        for (int i = 0; i < snakeLength; i++) {
-            snake[i].y -= SPACING;
-        }
+        snake[0].y -= SPACING;
     }
     if (playerDirection == DOWN) {
-        for (int i = 0; i < snakeLength; i++) {
-            snake[i].y += SPACING;
-        }
+        snake[0].y += SPACING;
     }
 }
