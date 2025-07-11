@@ -14,7 +14,7 @@ struct SnakeComponent {
     SnakeComponent() { }
     SnakeComponent(int xPos, int yPos) : x(xPos), y(yPos) { }
 
-    int x = 0, y = 0;
+    int x = -1, y = -1;
 };
 
 class Game {
@@ -22,9 +22,12 @@ class Game {
         Game();
         ~Game();
 
-        void setup();
         void run();
     private:
+        void setup();
+        void handleKeyPress();
+        void updateSnakePos();
+
         bool gameOver { false };
 
         std::vector<int> verticalLines;
@@ -45,6 +48,9 @@ class Game {
         };
 
         Direction playerDirection { STOP };
+
+        double lastMoveTime { 0.0 };
+        const double moveDelay { 0.2 };
 };
 
 #endif
