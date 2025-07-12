@@ -26,6 +26,8 @@ void Game::run() {
             lastMoveTime = currentTime;
         }
 
+        handleFruitCollision();
+
         BeginDrawing();
             ClearBackground(BLACK);
             for (int i = SPACING; i <= SCREEN_WIDTH - SPACING; i += SPACING) {
@@ -52,12 +54,10 @@ void Game::setup() {
         horizontalLines.push_back(i);
     }
 
-    const int vSize = verticalLines.size();
-    const int hSize = horizontalLines.size();
+    const int midPoint = SPACING / 2;
 
-    snake.push_back(SnakeComponent(verticalLines[vSize / 2], horizontalLines[hSize / 2]));
-    fruitX = verticalLines[rand() % vSize];
-    fruitY = horizontalLines[rand() % hSize];
+    snake.push_back(SnakeComponent(verticalLines[midPoint], horizontalLines[midPoint]));
+    generateFruit();
 }
 
 void Game::handleKeyPress() {
@@ -92,4 +92,33 @@ void Game::updateSnakePos() {
     }
 
     snake.pop_back();
+}
+
+void Game::handleFruitCollision() {
+    SnakeComponent front = snake.front();
+
+    if (front.x == fruitX && front.y == fruitY) {
+        if (snakeDirection == Direction::RIGHT) {
+            snake.push_front(SnakeComponent(front.x + SPACING, front.y));
+        }
+        if (snakeDirection == Direction::LEFT) {
+            snake.push_front(SnakeComponent(front.x - SPACING, front.y));
+        }
+        if (snakeDirection == Direction::UP) {
+            snake.push_front(SnakeComponent(front.x, front.y - SPACING));
+        }
+        if (snakeDirection == Direction::DOWN) {
+            snake.push_front(SnakeComponent(front.x, front.y + SPACING));
+        }
+
+        generateFruit();
+    }
+}
+
+void Game::generateFruit() {
+    const int vSize = verticalLines.size();
+    const int hSize = horizontalLines.size();
+
+    fruitX = verticalLines[rand() % vSize];
+    fruitY = horizontalLines[rand() % hSize];
 }

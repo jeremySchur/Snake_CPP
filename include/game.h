@@ -28,6 +28,8 @@ class Game {
         void setup();
         void handleKeyPress();
         void updateSnakePos();
+        void handleFruitCollision();
+        void generateFruit();
 
         bool gameOver { false };
 
