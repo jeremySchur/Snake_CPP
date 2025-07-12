@@ -11,13 +11,6 @@
 #define SCREEN_HEIGHT 900
 #define SPACING 30
 
-struct SnakeComponent {
-    SnakeComponent(int xPos, int yPos) : x(xPos), y(yPos) { }
-
-    int x { -1 };
-    int y { -1 };
-};
-
 class Game {
     public:
         Game();
@@ -36,7 +29,7 @@ class Game {
         std::vector<int> verticalLines;
         std::vector<int> horizontalLines;
 
-        std::deque<SnakeComponent> snake;
+        std::deque<std::pair<int, int>> snake;
 
         enum Direction {
             STOP,
@@ -49,7 +42,6 @@ class Game {
         Direction snakeDirection { STOP };
 
         int fruitX, fruitY;
-        int score { 0 };
 
         double lastMoveTime { 0.0 };
         const double moveDelay { 0.2 };

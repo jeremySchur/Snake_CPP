@@ -36,7 +36,7 @@ void Game::run() {
             }
             
             for (int i = 0; i < snake.size(); i++) {
-                DrawCircle(snake.at(i).x + halfSpacing, snake.at(i).y + halfSpacing, SPACING - 18, GREEN);
+                DrawCircle(snake.at(i).first + halfSpacing, snake.at(i).second + halfSpacing, SPACING - 18, GREEN);
             }
             DrawCircle(fruitX + halfSpacing, fruitY + halfSpacing, SPACING - 18, RED);
             
@@ -56,7 +56,7 @@ void Game::setup() {
 
     const int midPoint = SPACING / 2;
 
-    snake.push_back(SnakeComponent(verticalLines[midPoint], horizontalLines[midPoint]));
+    snake.push_back(std::pair<int, int>(verticalLines[midPoint], horizontalLines[midPoint]));
     generateFruit();
 }
 
@@ -76,39 +76,39 @@ void Game::handleKeyPress() {
 }
 
 void Game::updateSnakePos() {
-    SnakeComponent front = snake.front();
+    std::pair<int, int> front = snake.front();
 
     if (snakeDirection == Direction::RIGHT) {
-        snake.push_front(SnakeComponent(front.x + SPACING, front.y));
+        snake.push_front(std::pair<int, int>(front.first + SPACING, front.second));
     }
     if (snakeDirection == Direction::LEFT) {
-        snake.push_front(SnakeComponent(front.x - SPACING, front.y));
+        snake.push_front(std::pair<int, int>(front.first - SPACING, front.second));
     }
     if (snakeDirection == Direction::UP) {
-        snake.push_front(SnakeComponent(front.x, front.y - SPACING));
+        snake.push_front(std::pair<int, int>(front.first, front.second - SPACING));
     }
     if (snakeDirection == Direction::DOWN) {
-        snake.push_front(SnakeComponent(front.x, front.y + SPACING));
+        snake.push_front(std::pair<int, int>(front.first, front.second + SPACING));
     }
 
     snake.pop_back();
 }
 
 void Game::handleFruitCollision() {
-    SnakeComponent front = snake.front();
+    std::pair<int, int> front = snake.front();
 
-    if (front.x == fruitX && front.y == fruitY) {
+    if (front.first == fruitX && front.second == fruitY) {
         if (snakeDirection == Direction::RIGHT) {
-            snake.push_front(SnakeComponent(front.x + SPACING, front.y));
+            snake.push_front(std::pair<int, int>(front.first + SPACING, front.second));
         }
         if (snakeDirection == Direction::LEFT) {
-            snake.push_front(SnakeComponent(front.x - SPACING, front.y));
+            snake.push_front(std::pair<int, int>(front.first - SPACING, front.second));
         }
         if (snakeDirection == Direction::UP) {
-            snake.push_front(SnakeComponent(front.x, front.y - SPACING));
+            snake.push_front(std::pair<int, int>(front.first, front.second - SPACING));
         }
         if (snakeDirection == Direction::DOWN) {
-            snake.push_front(SnakeComponent(front.x, front.y + SPACING));
+            snake.push_front(std::pair<int, int>(front.first, front.second + SPACING));
         }
 
         generateFruit();
