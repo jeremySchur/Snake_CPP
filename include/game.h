@@ -31,6 +31,7 @@ class Game {
         void updateSnakePos();
         void handleFruitCollision();
         void generateFruit();
+        bool snakeCollision();
 
         bool gameOver { false };
 

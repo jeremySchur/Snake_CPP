@@ -40,6 +40,10 @@ void Game::run() {
 
         handleFruitCollision();
 
+        if (snakeCollision()) {
+            break;
+        }
+
         BeginDrawing();
             ClearBackground(BLACK);
             for (int i = SPACING; i <= SCREEN_WIDTH - SPACING; i += SPACING) {
@@ -139,4 +143,24 @@ void Game::generateFruit() {
     std::advance(it, index);
 
     fruitPos = *it;
+}
+
+bool Game::snakeCollision() {
+    std::pair<int, int> front = snake.front();
+
+    if (front.first < 0 || front.first > SCREEN_WIDTH) {
+        return true;
+    }
+    if (front.second < 0 || front.second > SCREEN_HEIGHT) {
+        return true;
+    }
+
+    for (int i = 1; i < snake.size(); i++) {
+        std::pair<int, int> current = snake.at(i);
+        if (front.first == current.first && front.second == current.second) {
+            return true;
+        }
+    }
+
+    return false;
 }
