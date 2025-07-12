@@ -5,11 +5,18 @@
 #include <time.h>
 #include <vector>
 #include <deque>
+#include <unordered_set>
 #include "raylib.h"
 
 #define SCREEN_WIDTH 900
 #define SCREEN_HEIGHT 900
 #define SPACING 30
+
+struct pair_hash {
+    std::size_t operator()(const std::pair<int, int>& p) const {
+        return std::hash<int>()(p.first) ^ (std::hash<int>()(p.second) << 1);
+    }
+};
 
 class Game {
     public:
@@ -20,6 +27,7 @@ class Game {
     private:
         void setup();
         void handleKeyPress();
+        void extendSnake(int x, int y);
         void updateSnakePos();
         void handleFruitCollision();
         void generateFruit();
@@ -41,7 +49,8 @@ class Game {
 
         Direction snakeDirection { STOP };
 
-        int fruitX, fruitY;
+        std::pair<int, int> fruitPos;
+        std::unordered_set<std::pair<int, int>, pair_hash> emptySpaces;
 
         double lastMoveTime { 0.0 };
         const double moveDelay { 0.2 };

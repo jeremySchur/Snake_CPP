@@ -1,8 +1,18 @@
 #include "../include/Game.h"
 
 Game::Game() {
-    srand(time(0));
-    setup();
+    for (int i = 0; i <= SCREEN_WIDTH; i += SPACING) {
+        verticalLines.push_back(i);
+    }
+    for (int i = 0; i <= SCREEN_HEIGHT; i += SPACING) {
+        horizontalLines.push_back(i);
+    }
+
+    for (int i = 0; i < verticalLines.size(); i++) {
+        for (int j = 0; j < horizontalLines.size(); j++) {
+            emptySpaces.insert(std::pair<int, int>(verticalLines[i], horizontalLines[i]));
+        }
+    }
 }
 
 Game::~Game() {
@@ -10,6 +20,8 @@ Game::~Game() {
 }
 
 void Game::run() {
+    setup();
+
     const int halfSpacing = SPACING / 2;
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Snake");
@@ -38,7 +50,7 @@ void Game::run() {
             for (int i = 0; i < snake.size(); i++) {
                 DrawCircle(snake.at(i).first + halfSpacing, snake.at(i).second + halfSpacing, SPACING - 18, GREEN);
             }
-            DrawCircle(fruitX + halfSpacing, fruitY + halfSpacing, SPACING - 18, RED);
+            DrawCircle(fruitPos.first + halfSpacing, fruitPos.second + halfSpacing, SPACING - 18, RED);
             
         EndDrawing();
     }
@@ -47,16 +59,11 @@ void Game::run() {
 }
 
 void Game::setup() {
-    for (int i = 0; i <= SCREEN_WIDTH; i += SPACING) {
-        verticalLines.push_back(i);
-    }
-    for (int i = 0; i <= SCREEN_HEIGHT; i += SPACING) {
-        horizontalLines.push_back(i);
-    }
-
+    srand(time(0));
+    
     const int midPoint = SPACING / 2;
 
-    snake.push_back(std::pair<int, int>(verticalLines[midPoint], horizontalLines[midPoint]));
+    extendSnake(verticalLines[midPoint], horizontalLines[midPoint]);
     generateFruit();
 }
 
@@ -75,40 +82,50 @@ void Game::handleKeyPress() {
     }
 }
 
+void Game::extendSnake(int x, int y) {
+    std::pair<int, int> space = std::pair<int, int>(x, y);
+
+    snake.push_front(space);
+    emptySpaces.erase(space);
+}
+
 void Game::updateSnakePos() {
     std::pair<int, int> front = snake.front();
 
     if (snakeDirection == Direction::RIGHT) {
-        snake.push_front(std::pair<int, int>(front.first + SPACING, front.second));
+        extendSnake(front.first + SPACING, front.second);
     }
     if (snakeDirection == Direction::LEFT) {
-        snake.push_front(std::pair<int, int>(front.first - SPACING, front.second));
+        extendSnake(front.first - SPACING, front.second);
     }
     if (snakeDirection == Direction::UP) {
-        snake.push_front(std::pair<int, int>(front.first, front.second - SPACING));
+        extendSnake(front.first, front.second - SPACING);
     }
     if (snakeDirection == Direction::DOWN) {
-        snake.push_front(std::pair<int, int>(front.first, front.second + SPACING));
+        extendSnake(front.first, front.second + SPACING);
     }
 
+    std::pair<int, int> back = snake.back();
+
     snake.pop_back();
+    emptySpaces.insert(back);
 }
 
 void Game::handleFruitCollision() {
     std::pair<int, int> front = snake.front();
 
-    if (front.first == fruitX && front.second == fruitY) {
+    if (front.first == fruitPos.first && front.second == fruitPos.second) {
         if (snakeDirection == Direction::RIGHT) {
-            snake.push_front(std::pair<int, int>(front.first + SPACING, front.second));
+            extendSnake(front.first + SPACING, front.second);
         }
         if (snakeDirection == Direction::LEFT) {
-            snake.push_front(std::pair<int, int>(front.first - SPACING, front.second));
+            extendSnake(front.first - SPACING, front.second);
         }
         if (snakeDirection == Direction::UP) {
-            snake.push_front(std::pair<int, int>(front.first, front.second - SPACING));
+            extendSnake(front.first, front.second - SPACING);
         }
         if (snakeDirection == Direction::DOWN) {
-            snake.push_front(std::pair<int, int>(front.first, front.second + SPACING));
+            extendSnake(front.first, front.second + SPACING);
         }
 
         generateFruit();
@@ -116,9 +133,10 @@ void Game::handleFruitCollision() {
 }
 
 void Game::generateFruit() {
-    const int vSize = verticalLines.size();
-    const int hSize = horizontalLines.size();
+    int index = rand() % emptySpaces.size();
 
-    fruitX = verticalLines[rand() % vSize];
-    fruitY = horizontalLines[rand() % hSize];
+    auto it = emptySpaces.begin();
+    std::advance(it, index);
+
+    fruitPos = *it;
 }
