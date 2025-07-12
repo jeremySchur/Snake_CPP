@@ -20,7 +20,7 @@ void Game::run() {
 
         handleKeyPress();
         if (currentTime - lastMoveTime >= moveDelay) {
-            if (playerDirection != STOP) {
+            if (snakeDirection != Direction::STOP) {
                 updateSnakePos();
             }
             lastMoveTime = currentTime;
@@ -33,8 +33,8 @@ void Game::run() {
                 DrawLine(0, i, SCREEN_WIDTH, i, GRAY);
             }
             
-            for (int i = 0; i < snakeLength; i++) {
-                DrawCircle(snake[i].x + halfSpacing, snake[i].y + halfSpacing, SPACING - 18, GREEN);
+            for (int i = 0; i < snake.size(); i++) {
+                DrawCircle(snake.at(i).x + halfSpacing, snake.at(i).y + halfSpacing, SPACING - 18, GREEN);
             }
             DrawCircle(fruitX + halfSpacing, fruitY + halfSpacing, SPACING - 18, RED);
             
@@ -55,42 +55,41 @@ void Game::setup() {
     const int vSize = verticalLines.size();
     const int hSize = horizontalLines.size();
 
-    snake[0] = SnakeComponent(verticalLines[vSize / 2], horizontalLines[hSize / 2]);
+    snake.push_back(SnakeComponent(verticalLines[vSize / 2], horizontalLines[hSize / 2]));
     fruitX = verticalLines[rand() % vSize];
     fruitY = horizontalLines[rand() % hSize];
 }
 
 void Game::handleKeyPress() {
     if (IsKeyDown(KEY_RIGHT)) {
-        playerDirection = RIGHT;
+        snakeDirection = Direction::RIGHT;
     }
     if (IsKeyDown(KEY_LEFT)) {
-        playerDirection = LEFT;
+        snakeDirection = Direction::LEFT;
     }
     if (IsKeyDown(KEY_UP)) {
-        playerDirection = UP;
+        snakeDirection = Direction::UP;
     }
     if (IsKeyDown(KEY_DOWN)) {
-        playerDirection = DOWN;
+        snakeDirection = Direction::DOWN;
     }
 }
 
 void Game::updateSnakePos() {
-    for (int i = snakeLength - 1; i > 0; i--) {
-        snake[i].x = snake[i-1].x;
-        snake[i].y = snake[i-1].y;
+    SnakeComponent front = snake.front();
+
+    if (snakeDirection == Direction::RIGHT) {
+        snake.push_front(SnakeComponent(front.x + SPACING, front.y));
+    }
+    if (snakeDirection == Direction::LEFT) {
+        snake.push_front(SnakeComponent(front.x - SPACING, front.y));
+    }
+    if (snakeDirection == Direction::UP) {
+        snake.push_front(SnakeComponent(front.x, front.y - SPACING));
+    }
+    if (snakeDirection == Direction::DOWN) {
+        snake.push_front(SnakeComponent(front.x, front.y + SPACING));
     }
 
-    if (playerDirection == RIGHT) {
-        snake[0].x += SPACING;
-    }
-    if (playerDirection == LEFT) {
-        snake[0].x -= SPACING;
-    }
-    if (playerDirection == UP) {
-        snake[0].y -= SPACING;
-    }
-    if (playerDirection == DOWN) {
-        snake[0].y += SPACING;
-    }
+    snake.pop_back();
 }

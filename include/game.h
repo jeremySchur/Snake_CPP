@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <vector>
+#include <deque>
 #include "raylib.h"
 
 #define SCREEN_WIDTH 900
@@ -11,10 +12,10 @@
 #define SPACING 30
 
 struct SnakeComponent {
-    SnakeComponent() { }
     SnakeComponent(int xPos, int yPos) : x(xPos), y(yPos) { }
 
-    int x = -1, y = -1;
+    int x { -1 };
+    int y { -1 };
 };
 
 class Game {
@@ -33,12 +34,8 @@ class Game {
         std::vector<int> verticalLines;
         std::vector<int> horizontalLines;
 
-        SnakeComponent snake[SPACING * SPACING];
-        int snakeLength { 1 };
+        std::deque<SnakeComponent> snake;
 
-        int fruitX, fruitY;
-        int score { 0 };
-        
         enum Direction {
             STOP,
             LEFT,
@@ -47,7 +44,10 @@ class Game {
             DOWN,
         };
 
-        Direction playerDirection { STOP };
+        Direction snakeDirection { STOP };
+
+        int fruitX, fruitY;
+        int score { 0 };
 
         double lastMoveTime { 0.0 };
         const double moveDelay { 0.2 };
