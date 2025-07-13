@@ -79,15 +79,19 @@ void Game::setup() {
 
 void Game::handleKeyPress() {
     if (IsKeyDown(KEY_RIGHT)) {
+        if (snakeDirection == Direction::LEFT) return;
         snakeDirection = Direction::RIGHT;
     }
     if (IsKeyDown(KEY_LEFT)) {
+        if (snakeDirection == Direction::RIGHT) return;
         snakeDirection = Direction::LEFT;
     }
     if (IsKeyDown(KEY_UP)) {
+        if (snakeDirection == Direction::DOWN) return;
         snakeDirection = Direction::UP;
     }
     if (IsKeyDown(KEY_DOWN)) {
+        if (snakeDirection == Direction::UP) return;
         snakeDirection = Direction::DOWN;
     }
 }
@@ -154,10 +158,10 @@ void Game::generateFruit() {
 bool Game::snakeCollision() {
     std::pair<int, int> front = snake.front();
 
-    if (front.first < 0 || front.first > SCREEN_WIDTH) {
+    if (front.first < 0 || front.first >= SCREEN_WIDTH) {
         return true;
     }
-    if (front.second < 0 || front.second > SCREEN_HEIGHT) {
+    if (front.second < 0 || front.second >= SCREEN_HEIGHT) {
         return true;
     }
 
