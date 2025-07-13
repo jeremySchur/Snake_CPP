@@ -59,6 +59,12 @@ void Game::run() {
         EndDrawing();
     }
 
+    while(!WindowShouldClose()) {
+        BeginDrawing();
+            DrawText("Game Over!", 180, (SCREEN_HEIGHT / 2) - 60, 100, WHITE);
+        EndDrawing();
+    }
+
     CloseWindow();
 }
 
